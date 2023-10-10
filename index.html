@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>random coffees</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Young+Serif&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Young Serif', serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .cafesfodas-titulo {
+            font-size: 50px;
+            text-align: center;
+            background-color: rgb(116, 21, 21);
+            color: yellow;
+        }
+
+        .conteudo {
+            display: flex;
+            flex-direction: column;
+            background-color: brown;
+            height: 1000px;
+            align-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        #nome-cafe {
+            color: yellow;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 25px;
+            border-radius: 10px;
+            text-decoration: underline;
+        }
+
+        #description {
+            width: 70%;
+            background-color: rgb(116, 21, 21);
+            color: yellow;
+            border-radius: 10px;
+        }
+
+        #listaingredientes {
+            color: yellow;
+        }
+
+        #cafefoto {
+            width: 80%;
+            height: 40%;
+            object-fit: cover;
+            border-radius: 10px;
+            outline: solid yellow;
+        }
+
+        button,
+        input[type="submit"],
+        input[type="reset"] {
+            background: none;
+            color: inherit;
+            border: none;
+            padding: 0;
+            font: inherit;
+            cursor: pointer;
+            outline: inherit;
+        }
+
+        #aleatorio {
+            border-radius: 5px;
+            margin: 10px;
+            background-color: rgb(116, 21, 21);
+            -webkit-appearance: none;
+            font-family: 'Young Serif', serif;
+            outline: solid yellow;
+            color: yellow;
+        }
+
+        #aleatorio:hover {
+
+            background-color: brown;
+        }
+
+        #aleatorio:active {
+            background-color: yellow;
+            color: brown;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="cafesfodas-titulo">
+        random coffees
+    </header>
+    <div class="conteudo">
+        <div id="nome-cafe">
+
+        </div>
+        <div id="description">
+        </div>
+        <ol id="listaingredientes">
+        </ol>
+        <img src="" id="cafefoto">
+        <button id="aleatorio">
+            Generate new coffee
+        </button>
+    </div>
+
+    <script>
+        const botao = document.getElementById("aleatorio");
+        const titulocafe = document.getElementById("nome-cafe");
+        const description = document.getElementById("description");
+        const list = document.getElementById("listaingredientes");
+        const foto = document.getElementById("cafefoto");
+        let cafeslista; // Declare a variável fora da função para torná-la acessível em todo o escopo
+
+        async function getcoffe() {
+            const resp = await fetch('https://api.sampleapis.com/coffee/hot');
+            const data = await resp.json();
+            return data;
+        }
+
+        async function randomCafe() {
+            try {
+                cafeslista = await getcoffe(); // Atribua o valor à variável declarada fora da função
+                let atualint = Math.floor(Math.random() * (cafeslista.length));
+                let atualcafe = cafeslista[atualint];
+                console.log(atualcafe)
+                console.log(atualint)
+                titulocafe.innerText = atualcafe.title;
+                description.innerHTML = atualcafe.description;
+                let atuallist = "";
+                for (let i = 0; i<atualcafe.ingredients.length; i++){
+                    atuallist += `<li>${atualcafe.ingredients[i]}</li>`
+                }
+                console.log(atuallist)
+                list.innerHTML = atuallist;
+                foto.src = atualcafe.image;
+            } catch (error) {
+                console.error('Ocorreu um erro:', error);
+            }
+        }
+
+        randomCafe();
+        console.log(cafeslista);
+
+        botao.onclick = randomCafe;
+
+
+
+    </script>
+
+</body>
+
+</html>
